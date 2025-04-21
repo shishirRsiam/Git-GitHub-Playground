@@ -1,0 +1,40 @@
+# Name of the GitHub Actions workflow
+name: Send Email on Pull Request
+
+# Trigger the workflow when a Pull Request is opened or reopened
+on:
+  pull_request:
+    types: [opened, reopened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Send Email
+      uses: dawidd6/action-send-mail@v3
+      with:
+        server_address: smtp.gmail.com
+        server_port: 465
+        username: ${{ secrets.EMAIL_USERNAME }}
+        password: ${{ secrets.EMAIL_PASSWORD }}
+
+        subject: "🔔 New Pull Request by ${{ github.actor }} – ${{ github.event.pull_request.title }}"
+        to: ${{ secrets.EMAIL_TO }}
+        from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
+        content_type: text/plain
+
+        body: |
+          📬 A new pull request has been submitted!
+
+          📝 Title: "${{ github.event.pull_request.title }}"
+          🧑‍💻 Opened By: ${{ github.actor }}
+          🔗 Link: ${{ github.event.pull_request.html_url }}
+          🏷️ Base Branch: ${{ github.event.pull_request.base.ref }}
+          🔀 Head Branch: ${{ github.event.pull_request.head.ref }}
+          📝 Description:
+          ${{ github.event.pull_request.body }}
+
+          🕒 Time: ${{ github.event.pull_request.created_at }}
+
+          🚀 Happy Reviewing!
