@@ -2,13 +2,18 @@ name: Send Email on Push
 
 on:
   push:
-    branches: [main] # or any branch you prefer
+    branches: [main] # Trigger only when code is pushed to the 'main' branch
 
 jobs:
   notify:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # GitHub-hosted runner
 
     steps:
+    - name: Get Current Time
+      id: time
+      run: echo "time=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
+      # Stores the current UTC time in a variable for later use
+
     - name: Send Email
       uses: dawidd6/action-send-mail@v3
       with:
@@ -16,14 +21,23 @@ jobs:
         server_port: 465
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "🔥 New Push to Main – ${{ github.event.head_commit.message }}"
+
+        subject: "🔥 [${{ github.repository }}] Push by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
+        
         to: ${{ secrets.EMAIL_TO }}
         from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
-        content_type: text/plain
-        body: |
-          A new push was made to the main branch.
+        content_type: text/html  # Changed to HTML for formatting
 
-          Repo: ${{ github.repository }}
-          Commit: ${{ github.sha }}
-          By: ${{ github.actor }}
-          Message: ${{ github.event.head_commit.message }}
+        body: |
+          <h2>📢 New Push to <code>main</code> Branch</h2>
+
+          <p><strong>🗂 Repository:</strong> <a href="https://github.com/${{ github.repository }}">{{ github.repository }}</a></p>
+          <p><strong>🧑‍💻 Pushed By:</strong> ${{ github.actor }}</p>
+          <p><strong>📧 Commit Author:</strong> ${{ github.event.head_commit.author.name }} &lt;${{ github.event.head_commit.author.email }}&gt;</p>
+          <p><strong>📝 Commit Message:</strong> ${{ github.event.head_commit.message }}</p>
+          <p><strong>🔗 Commit Link:</strong> <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}">View Commit</a></p>
+          <p><strong>🕒 Pushed At:</strong> ${{ steps.time.outputs.time }}</p>
+
+          <br/>
+          <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="50" alt="GitHub Logo" />
+          <p style="color:gray;">This is an automated message from GitHub Actions</p>
