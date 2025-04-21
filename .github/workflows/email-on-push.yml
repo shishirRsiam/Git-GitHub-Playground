@@ -2,16 +2,32 @@ name: Send Email on Push
 
 on:
   push:
-    branches: [main] # Trigger when pushing to 'main' branch
+    branches: [main]
 
 jobs:
   notify:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Get Current Time
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get current UTC time
       id: time
       run: echo "time=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
+
+    - name: Read HTML content
+      id: read_html
+      run: |
+        # Replace placeholders in HTML with actual values using envsubst
+        export COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+        export REPO="${{ github.repository }}"
+        export ACTOR="${{ github.actor }}"
+        export COMMIT_MESSAGE="${{ github.event.head_commit.message }}"
+        export COMMIT_AUTHOR="${{ github.event.head_commit.author.name }}"
+        export TIME="${{ steps.time.outputs.time }}"
+
+        envsubst < email-template.html > parsed-email.html
 
     - name: Send Email
       uses: dawidd6/action-send-mail@v3
@@ -20,35 +36,8 @@ jobs:
         server_port: 465
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
-
-        subject: "🔥 New Push to Main by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
-
+        subject: "🚀 New Push by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
         to: ${{ secrets.EMAIL_TO }}
         from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
-        content_type: html/text
-
-        body: |
-          <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
-            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
-              <h2 style="color: #333333;">🚨 New Push to <code style="background-color:#eee;padding:2px 4px;border-radius:4px;">main</code></h2>
-              
-              <p><strong>📌 Repository:</strong> <a href="https://github.com/${{ github.repository }}" style="color:#007bff;">${{ github.repository }}</a></p>
-              
-              <p><strong>👤 Author:</strong> ${{ github.event.head_commit.author.name }} &lt;${{ github.event.head_commit.author.email }}&gt;</p>
-              
-              <p><strong>🙋 Pushed By:</strong> @${{ github.actor }}</p>
-              
-              <p><strong>🔗 Commit:</strong> <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}" style="color:#007bff;">${{ github.sha }}</a></p>
-              
-              <p><strong>📝 Message:</strong> <em>${{ github.event.head_commit.message }}</em></p>
-              
-              <p><strong>🕒 Time:</strong> ${{ steps.time.outputs.time }}</p>
-
-              <hr style="margin: 20px 0;" />
-
-              <footer style="text-align: center; font-size: 12px; color: #888888;">
-                Sent by <strong>GitHub Actions</strong> 🚀 <br />
-                <a href="https://github.com/${{ github.repository }}" style="color:#888888;text-decoration:none;">${{ github.repository }}</a>
-              </footer>
-            </div>
-          </div>
+        content_type: text/html
+        body: file://parsed-email.html

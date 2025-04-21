@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      .container { background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #ddd; }
+      a { color: #007bff; text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>📦 New Push to <code>main</code></h2>
+      <p><strong>📌 Repository:</strong> <a href="https://github.com/${REPO}">${REPO}</a></p>
+      <p><strong>👤 Author:</strong> ${COMMIT_AUTHOR}</p>
+      <p><strong>🙋 Pushed By:</strong> ${ACTOR}</p>
+      <p><strong>🔗 Commit:</strong> <a href="${COMMIT_URL}">${COMMIT_URL}</a></p>
+      <p><strong>📝 Message:</strong> ${COMMIT_MESSAGE}</p>
+      <p><strong>🕒 Time:</strong> ${TIME}</p>
+      <hr>
+      <footer style="font-size:12px;color:#888">GitHub Actions Notification</footer>
+    </div>
+  </body>
+</html>
