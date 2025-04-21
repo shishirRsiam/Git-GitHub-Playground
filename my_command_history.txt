@@ -22,3 +22,5 @@
 21-04-2025 23:24:20  380  git commit -am "add email-on-pull.yml test"
 21-04-2025 23:24:25  381  git push
 21-04-2025 23:38:31  382  git add .
+21-04-2025 23:39:05  383  git commit -am "add index.html file and name: Deploy to GitHub Pages yml file"
+21-04-2025 23:39:09  384  git push
