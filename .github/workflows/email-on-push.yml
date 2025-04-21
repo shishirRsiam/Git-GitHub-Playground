@@ -2,17 +2,16 @@ name: Send Email on Push
 
 on:
   push:
-    branches: [main] # Trigger only when code is pushed to the 'main' branch
+    branches: [main] # Trigger when pushing to 'main' branch
 
 jobs:
   notify:
-    runs-on: ubuntu-latest # GitHub-hosted runner
+    runs-on: ubuntu-latest
 
     steps:
     - name: Get Current Time
       id: time
       run: echo "time=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
-      # Stores the current UTC time in a variable for later use
 
     - name: Send Email
       uses: dawidd6/action-send-mail@v3
@@ -22,22 +21,34 @@ jobs:
         username: ${{ secrets.EMAIL_USERNAME }}
         password: ${{ secrets.EMAIL_PASSWORD }}
 
-        subject: "🔥 [${{ github.repository }}] Push by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
-        
+        subject: "🔥 New Push to Main by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
+
         to: ${{ secrets.EMAIL_TO }}
         from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
-        content_type: text/html  # Changed to HTML for formatting
+        content_type: html/text
 
         body: |
-          <h2>📢 New Push to <code>main</code> Branch</h2>
+          <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+            <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+              <h2 style="color: #333333;">🚨 New Push to <code style="background-color:#eee;padding:2px 4px;border-radius:4px;">main</code></h2>
+              
+              <p><strong>📌 Repository:</strong> <a href="https://github.com/${{ github.repository }}" style="color:#007bff;">${{ github.repository }}</a></p>
+              
+              <p><strong>👤 Author:</strong> ${{ github.event.head_commit.author.name }} &lt;${{ github.event.head_commit.author.email }}&gt;</p>
+              
+              <p><strong>🙋 Pushed By:</strong> @${{ github.actor }}</p>
+              
+              <p><strong>🔗 Commit:</strong> <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}" style="color:#007bff;">${{ github.sha }}</a></p>
+              
+              <p><strong>📝 Message:</strong> <em>${{ github.event.head_commit.message }}</em></p>
+              
+              <p><strong>🕒 Time:</strong> ${{ steps.time.outputs.time }}</p>
 
-          <p><strong>🗂 Repository:</strong> <a href="https://github.com/${{ github.repository }}">{{ github.repository }}</a></p>
-          <p><strong>🧑‍💻 Pushed By:</strong> ${{ github.actor }}</p>
-          <p><strong>📧 Commit Author:</strong> ${{ github.event.head_commit.author.name }} &lt;${{ github.event.head_commit.author.email }}&gt;</p>
-          <p><strong>📝 Commit Message:</strong> ${{ github.event.head_commit.message }}</p>
-          <p><strong>🔗 Commit Link:</strong> <a href="https://github.com/${{ github.repository }}/commit/${{ github.sha }}">View Commit</a></p>
-          <p><strong>🕒 Pushed At:</strong> ${{ steps.time.outputs.time }}</p>
+              <hr style="margin: 20px 0;" />
 
-          <br/>
-          <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="50" alt="GitHub Logo" />
-          <p style="color:gray;">This is an automated message from GitHub Actions</p>
+              <footer style="text-align: center; font-size: 12px; color: #888888;">
+                Sent by <strong>GitHub Actions</strong> 🚀 <br />
+                <a href="https://github.com/${{ github.repository }}" style="color:#888888;text-decoration:none;">${{ github.repository }}</a>
+              </footer>
+            </div>
+          </div>
