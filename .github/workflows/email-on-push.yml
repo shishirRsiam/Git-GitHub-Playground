@@ -22,8 +22,9 @@ jobs:
         password: ${{ secrets.EMAIL_PASSWORD }}  # Gmail password or App Password stored as a secret
 
         # Email subject – includes the latest commit message
-        subject: "🔥 New Push to Main – ${{ github.event.head_commit.message }}"
-
+        # subject: "🔥 New Push to Main – ${{ github.event.head_commit.message }}"
+        # subject: "🔥 New Push to Main by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
+        subject: "🔥 [${{ github.repository }}] Push by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
         # Recipient's email address (also stored as a secret)
         to: ${{ secrets.EMAIL_TO }}
 
@@ -35,15 +36,14 @@ jobs:
 
         # Body of the email – contains info about the push
         body: |
-          🚀 A new push was made to the **main** branch!
+          🚀 A new push was made to the main branch!
 
-          🔗 **Repository**: ${{ github.repository }}
-          🔖 **Commit Message**: "${{ github.event.head_commit.message }}"
-          👤 **Pushed By**: ${{ github.actor }}
-          🧑‍💻 **Author**: ${{ github.event.head_commit.author.name }}
-          🔁 **Commit SHA**: ${{ github.sha }}
-          🔍 **View Commit**: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+          🔗 Repository: ${{ github.repository }}
+          🔖 Commit Message: "${{ github.event.head_commit.message }}"
+          👤 Pushed By: ${{ github.actor }}
+          🧑‍💻 Author: ${{ github.event.head_commit.author.name }}
+          🔁 Commit SHA: ${{ github.sha }}
+          🔍 View Commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
 
           Cheers,  
           – GitHub Actions 🤖
-          
