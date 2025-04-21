@@ -1,0 +1,25 @@
+{
+  "name": "git-github-playground",
+  "version": "1.0.0",
+  "description": "My personal Git &amp; GitHub learning space. From basic commands to advanced version control workflows.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shishirRsiam/Git-GitHub-Playground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/shishirRsiam/Git-GitHub-Playground/issues"
+  },
+  "homepage": "https://github.com/shishirRsiam/Git-GitHub-Playground#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
