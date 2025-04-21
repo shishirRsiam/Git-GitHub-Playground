@@ -1,2 +1,5 @@
 21-04-2025 22:31:57  364  -----END RSA PRIVATE KEY-----
 21-04-2025 22:32:17  365  git add .
+21-04-2025 22:32:28  366  git commit -am "Step-By-Step GitHub Actions && Send an email on push using GitHub Actions"
+21-04-2025 22:32:33  367  git push
+21-04-2025 22:32:54  368  mkdir .github
