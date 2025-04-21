@@ -1,43 +1,49 @@
+# Name of the GitHub Actions workflow
 name: Send Email on Push
 
+# Trigger the workflow only when there's a push to the "main" branch
 on:
   push:
-    branches: [main]
+    branches: [main] # You can replace "main" with any other branch name you want to monitor
 
 jobs:
-  notify:
-    runs-on: ubuntu-latest
+  notify:  # Name of the job
+    runs-on: ubuntu-latest  # Use the latest version of the Ubuntu runner
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+    - name: Send Email  # Step name
+      uses: dawidd6/action-send-mail@v3  # Using a pre-built GitHub Action to send emails
 
-    - name: Get current UTC time
-      id: time
-      run: echo "time=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_OUTPUT
-
-    - name: Read HTML content
-      id: read_html
-      run: |
-        # Replace placeholders in HTML with actual values using envsubst
-        export COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-        export REPO="${{ github.repository }}"
-        export ACTOR="${{ github.actor }}"
-        export COMMIT_MESSAGE="${{ github.event.head_commit.message }}"
-        export COMMIT_AUTHOR="${{ github.event.head_commit.author.name }}"
-        export TIME="${{ steps.time.outputs.time }}"
-
-        envsubst < email-template.html > parsed-email.html
-
-    - name: Send Email
-      uses: dawidd6/action-send-mail@v3
+      # Configuration inputs for the action
       with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "🚀 New Push by ${{ github.actor }} – ${{ github.event.head_commit.message }}"
+        server_address: smtp.gmail.com  # SMTP server address for Gmail
+        server_port: 465  # SMTP server port for secure SSL connection (use 587 for TLS)
+        username: ${{ secrets.EMAIL_USERNAME }}  # Gmail username stored as a secret in GitHub repo
+        password: ${{ secrets.EMAIL_PASSWORD }}  # Gmail password or App Password stored as a secret
+
+        # Email subject – includes the latest commit message
+        subject: "🔥 New Push to Main – ${{ github.event.head_commit.message }}"
+
+        # Recipient's email address (also stored as a secret)
         to: ${{ secrets.EMAIL_TO }}
+
+        # Sender email with display name "GitHub Actions"
         from: GitHub Actions <${{ secrets.EMAIL_USERNAME }}>
-        content_type: text/html
-        body: file://parsed-email.html
+
+        # Format of the email content (can be text/plain or text/html)
+        content_type: text/plain
+
+        # Body of the email – contains info about the push
+        body: |
+          🚀 A new push was made to the **main** branch!
+
+          🔗 **Repository**: ${{ github.repository }}
+          🔖 **Commit Message**: "${{ github.event.head_commit.message }}"
+          👤 **Pushed By**: ${{ github.actor }}
+          🧑‍💻 **Author**: ${{ github.event.head_commit.author.name }}
+          🔁 **Commit SHA**: ${{ github.sha }}
+          🔍 **View Commit**: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+
+          Cheers,  
+          – GitHub Actions 🤖
+          
