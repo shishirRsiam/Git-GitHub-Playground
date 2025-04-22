@@ -48,3 +48,10 @@
 22-04-2025 00:05:50  406  git push
 22-04-2025 10:32:37  364  -----END RSA PRIVATE KEY-----
 22-04-2025 10:33:17  365  git add .
+22-04-2025 10:33:18  366  git commit -am "GIT CHEATSHEET"
+22-04-2025 10:33:23  367  git push
+22-04-2025 10:36:52  368  git checkout
+22-04-2025 10:37:02  369  git status
+22-04-2025 10:41:03  370  git checkout master
+22-04-2025 10:41:26  371  git checkout -b master
+22-04-2025 10:45:28  372  git add .
