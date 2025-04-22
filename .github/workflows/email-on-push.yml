@@ -41,6 +41,9 @@ jobs:
           👤 Pushed By: ${{ github.actor }}
           🧑‍💻 Repository Author: ${{ github.event.head_commit.author.name }}
           🔗 Repository:  https://github.com/${{ github.repository }}
+
+          
+          📅 Date: ${{ github.event.head_commit.timestamp }}
           🔖 Commit Message: "${{ github.event.head_commit.message }}"
           🔁 Commit SHA: ${{ github.sha }}
           🔍 View Commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
