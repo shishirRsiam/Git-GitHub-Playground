@@ -56,3 +56,5 @@
 22-04-2025 10:41:26  371  git checkout -b master
 22-04-2025 10:45:28  372  git add .
 22-04-2025 11:12:44  396  git add .
+22-04-2025 11:13:47  399  git add .
+22-04-2025 11:13:59  400  git commmit -am"push to main"
