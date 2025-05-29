@@ -15,7 +15,7 @@ jobs:
 
       - name: List files in custom dir
         run: ls -la
-        working-directory: ./docker_plus_github
+        # working-directory: ./docker_plus_github
 
       - name: Build Docker image
         run: docker build -t hello-image .
