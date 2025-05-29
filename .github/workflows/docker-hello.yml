@@ -19,6 +19,7 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t hello-image .
+        working-directory: docker_plus_github
 
       - name: Run Docker container
         run: docker run hello-image
